@@ -2,7 +2,7 @@ import json
 import random
 import math
 
-# Load the state capitals data
+# Load the state capitals
 with open("us_state_capitals.json", "r") as f:
     all_capitals = json.load(f)["state_capitals"]
 
@@ -18,8 +18,10 @@ def haversine(coords1, coords2):
     lat1, lon1 = coords1
     lat2, lon2 = coords2
     lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+    
     dlat = lat2 - lat1
     dlon = lon2 - lon1
+    
     a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
     c = 2 * math.asin(math.sqrt(a))
     radius = 3959
@@ -46,6 +48,7 @@ def s_a(route, temp=10000, cooling_rate=0.9995, max_iter=10000):
         new_route = current[:]
         a, b = random.sample(range(len(new_route)), 2)
         new_route[a], new_route[b] = new_route[b], new_route[a]
+        
         new_distance = total_distance(new_route)
         delta = new_distance - current_distance
 
@@ -56,7 +59,9 @@ def s_a(route, temp=10000, cooling_rate=0.9995, max_iter=10000):
             if current_distance < best_distance:
                 best = new_route[:]
                 best_distance = new_distance
+        
         temp *= cooling_rate
+    
     return best
 
 
@@ -104,7 +109,7 @@ final_route.append(end)
 
 total = total_distance(final_route)
 
-# Output
+# Results
 print("\nOptimized Full Route Through All States:")
 for city in final_route:
     print(f"{city['state']} - {city['capital']}")
